@@ -1,13 +1,26 @@
-import { Box, Container, Flex, Heading, Text, VStack, Link, useColorMode, IconButton } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Text, VStack, Link, useColorMode, IconButton, Input, Textarea, Button } from "@chakra-ui/react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useState } from "react";
 
 const Index = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const [posts] = useState([
+  const [posts, setPosts] = useState([
     { title: "First Blog Post", excerpt: "This is the summary of the first blog post." },
     { title: "Second Blog Post", excerpt: "This is the summary of the second blog post." },
   ]);
+  const [newPost, setNewPost] = useState({ title: "", content: "" });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewPost({ ...newPost, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newPostData = { title: newPost.title, excerpt: newPost.content };
+    setPosts([...posts, newPostData]);
+    setNewPost({ title: "", content: "" });
+  };
 
   return (
     <Container maxW="container.xl" p={4}>
@@ -46,6 +59,28 @@ const Index = () => {
           </Box>
         </Box>
       </Flex>
+      <Box mt={8}>
+        <Heading as="h2" size="md" mb={4}>Add New Post</Heading>
+        <form onSubmit={handleSubmit}>
+          <VStack spacing={4}>
+            <Input
+              placeholder="Title"
+              name="title"
+              value={newPost.title}
+              onChange={handleInputChange}
+              required
+            />
+            <Textarea
+              placeholder="Content"
+              name="content"
+              value={newPost.content}
+              onChange={handleInputChange}
+              required
+            />
+            <Button type="submit" colorScheme="teal">Add Post</Button>
+          </VStack>
+        </form>
+      </Box>
     </Container>
   );
 };
