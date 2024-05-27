@@ -1,5 +1,5 @@
 import { Box, Container, Flex, Heading, Text, VStack, Link, useColorMode, IconButton, Input, Textarea, Button } from "@chakra-ui/react";
-import { FaMoon, FaSun } from "react-icons/fa";
+import { FaMoon, FaSun, FaTrash } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
 const Index = () => {
@@ -34,6 +34,13 @@ const Index = () => {
     setNewPost({ title: "", content: "" });
   };
 
+  const handleDelete = (index) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      const updatedPosts = posts.filter((_, i) => i !== index);
+      setPosts(updatedPosts);
+    }
+  };
+
   return (
     <Container maxW="container.xl" p={4} bg={colorMode === "light" ? "gray.50" : "gray.900"} color={colorMode === "light" ? "black" : "white"}>
       <Flex as="nav" justify="space-between" align="center" mb={8}>
@@ -49,7 +56,14 @@ const Index = () => {
           <VStack spacing={8}>
             {posts.map((post, index) => (
               <Box key={index} p={5} shadow="md" borderWidth="1px" borderRadius="md" w="100%" bg={colorMode === "light" ? "white" : "gray.700"}>
-                <Heading fontSize="xl">{post.title}</Heading>
+                <Flex justify="space-between" align="center">
+                  <Heading fontSize="xl">{post.title}</Heading>
+                  <IconButton
+                    aria-label="Delete post"
+                    icon={<FaTrash />}
+                    onClick={() => handleDelete(index)}
+                  />
+                </Flex>
                 <Text mt={4}>{post.excerpt}</Text>
                 <Link color="teal.500" mt={2} display="block">Read more...</Link>
               </Box>
